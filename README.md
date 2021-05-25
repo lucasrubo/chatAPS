@@ -7,6 +7,7 @@
 ### Passo 1:
 
 ```
+
 Agora execute o arquivo server.py em qualquer terminal cmd
 
 ```
