@@ -1,4 +1,4 @@
-# TCP-IP-chat-room
+# TCP/IP Chat
 
 É uma sala de chat TCP / IP simples com programação de socket, vinculando-se a vários clientes
 
@@ -7,15 +7,6 @@
 ### Passo 1:
 
 ```
-
-Abra três cmd para o diretório particular onde você clonou este repositório
-
-```
-
-### Passo 2:
-
-```
-
 Agora execute o arquivo server.py em qualquer terminal cmd
 
 ```
@@ -24,7 +15,7 @@ Agora execute o arquivo server.py em qualquer terminal cmd
 
 ```
 
-Execute o arquivo client.py no terminal cmd restante e digite seu nome
+Execute o arquivo client.py restante e digite seu nome
 
 ```
 
