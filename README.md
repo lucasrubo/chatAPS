@@ -6,27 +6,27 @@
 
 ### Passo 1:
 
-`` `
+```
 
 Abra três cmd para o diretório particular onde você clonou este repositório
 
-`` `
+```
 
 ### Passo 2:
 
-`` `
+```
 
 Agora execute o arquivo server.py em qualquer terminal cmd
 
-`` `
+```
 
 ### Etapa 3:
 
-`` `
+```
 
 Execute o arquivo client.py no terminal cmd restante e digite seu nome
 
-`` `
+```
 
 #### Clique abaixo para saber mais sobre sockets!
 
