@@ -1,40 +1,33 @@
 # TCP-IP-chat-room
 
-Its a simple TCP/IP chat room with socket programming, binding with multiple clients
+É uma sala de chat TCP / IP simples com programação de socket, vinculando-se a vários clientes
 
-## User Manual:
+## Manual do usuário:
 
-### Step 1:
+### Passo 1:
 
-```
+`` `
 
-Open three cmd for the particluar directory where you clone this repositary
+Abra três cmd para o diretório particular onde você clonou este repositório
 
-```
-> As like this:
+`` `
 
-![img source](img1.png)
+### Passo 2:
 
-### Step 2:
+`` `
 
-```
+Agora execute o arquivo server.py em qualquer terminal cmd
 
-Now run server.py file on any cmd terminal
+`` `
 
-```
-![img source](img2.png)
+### Etapa 3:
 
-### Step 3:
+`` `
 
-```
+Execute o arquivo client.py no terminal cmd restante e digite seu nome
 
-Run client.py file on the remaining cmd terminal and enter your name 
+`` `
 
-```
+#### Clique abaixo para saber mais sobre sockets!
 
-![img source](img3.png)
-
-#### Click below to know more about sockets!
-
-[sockets using python](https://docs.python.org/3/library/socket.html)
-
+[sockets usando python] (https://docs.python.org/3/library/socket.html)
