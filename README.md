@@ -1,12 +1,40 @@
-#CHAT
+# TCP-IP-chat-room
 
---- TUTORIAL ---
-executar um cmd
-ir até a pasta aonde esta ngrok
+Its a simple TCP/IP chat room with socket programming, binding with multiple clients
 
-cd C:\vscode\chatAPS
-ngrok tcp 123456
+## User Manual:
 
-Execute Server.py
-ip: 127.0.0.1
-porta: 65535
+### Step 1:
+
+```
+
+Open three cmd for the particluar directory where you clone this repositary
+
+```
+> As like this:
+
+![img source](img1.png)
+
+### Step 2:
+
+```
+
+Now run server.py file on any cmd terminal
+
+```
+![img source](img2.png)
+
+### Step 3:
+
+```
+
+Run client.py file on the remaining cmd terminal and enter your name 
+
+```
+
+![img source](img3.png)
+
+#### Click below to know more about sockets!
+
+[sockets using python](https://docs.python.org/3/library/socket.html)
+

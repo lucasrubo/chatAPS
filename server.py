@@ -1,49 +1,50 @@
+import threading 
 import socket
-import threading
+import emoji
 
-HOST = input("Host: ")
-PORT = int(input("Port: "))
+host = "26.122.120.56"
+port = 59000
 
 server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-server.bind((HOST,PORT))
-server.listen()
-print(f'Server is Up and Listening on {HOST}:{PORT}')
-
+server.bind((host,port))
+server.listen(5)
 clients = []
-usernames = []
+aliases = []
 
-def globalMessage(message):
+print("server rodando")
+def broadcast(sender,message):
     for client in clients:
-        client.send(message)
+        if client != sender:
+            client.send(message)
 
-def handleMessages(client):
+def handle_client(client):
     while True:
         try:
-            receiveMessageFromClient = client.recv(2048).decode('ascii')
-            globalMessage(f'{usernames[clients.index(client)]} :{receiveMessageFromClient}'.encode('ascii'))
+            message = client.recv(1024)
+            broadcast(client,message)
         except:
-            clientLeaved = clients.index(client)
+            index = clients.index(client)
+            clients.remove(client)
             client.close()
-            clients.remove(clients[clientLeaved])
-            clientLeavedUsername = usernames[clientLeaved]
-            print(f'{clientLeavedUsername} has left the chat...')
-            globalMessage(f'{clientLeavedUsername} has left us...'.encode('ascii'))
-            usernames.remove(clientLeavedUsername)
+            alias = aliases[index]
+            broadcast(client,f"{alias} saiu do chat!".encode('utf-8'))
+            aliases.remove(alias)
+            break
 
-
-def initialConnection():
+def receive():
     while True:
-        try:
-            client, address = server.accept()
-            print(f"New Connetion: {str(address)}")
-            clients.append(client)
-            client.send('getUser'.encode('ascii'))
-            username = client.recv(2048).decode('ascii')
-            usernames.append(username)
-            globalMessage(f'{username} just joined the chat!'.encode('ascii'))
-            user_thread = threading.Thread(target=handleMessages,args=(client,))
-            user_thread.start()
-        except:
-            pass
+        client,address = server.accept()
+        print(f"Conexao estabelecida {str(address)}")
+        client.send("Nome:".encode('utf-8'))
+        alias = client.recv(1024)
+        aliases.append(alias)
+        clients.append(client)
+        print(alias)
+        broadcast(client,f'{alias} entrou no chat'.encode('utf-8'))
+        client.send("Conectado ".encode('utf-8'))
+        thread = threading.Thread(target=handle_client,args=(client,))
+        thread.start()
 
-initialConnection()
+if __name__ == "__main__":
+    receive()
+
