@@ -107,7 +107,6 @@ while True:
         ##janela2.un_hide()
         nome = values['ip']+":"+values['porta']
         janela2 = janela_chat(nome)
-        
 
         ##alais = input("Escolha um Nome: ")
 
