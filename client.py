@@ -46,7 +46,7 @@ def janela_chat(sala):
     #sg.theme('GreenMono')
     layout = [
         [sg.Text('',pad=(240,0)),sg.Button('Sair')],
-        [sg.Output(size=(400,30), key='chat')],
+        [sg.Multiline(size=(300,28), auto_refresh=True, reroute_stdout=True, reroute_cprint=True, disabled=True, key='-OUT-')],
         [sg.Multiline(size=(62,8),key="mensagem"),sg.Button('Enviar')],
     ]    
     
@@ -77,6 +77,7 @@ janela1,janela2 = janela_username(), None
 contar = 0
 while True:
     window, event, values = sg.read_all_windows()
+    #window["-OUT-"](disabled=True)
     if window == janela1 and event == sg.WINDOW_CLOSED:
         break
     
@@ -123,7 +124,8 @@ while True:
                         global contar
                         contar=0
                 except:
-                    print("Error......404")
+                    ##print("Error......404")
+                    sg.popup('Error......404')
                     window.close()
                     client.close
                     break
@@ -131,7 +133,8 @@ while True:
         def client_send(message_send):
             global contar
             if(contar >= 10):                
-                print("TIMEOUT POR SPAM")
+                #print("TIMEOUT POR SPAM")
+                sg.popup('TIMEOUT POR SPAM')
             else:
                 message = f'{alais}: {message_send}'
                 client.send(message.encode('utf-8'))
@@ -160,5 +163,7 @@ while True:
     
     if window == janela2 and event == 'Sair':     
         break
+
+        
 # Close
 window.close()
