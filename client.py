@@ -81,6 +81,7 @@ def janela_username():
 janela1,janela2 = janela_username(), None
 contar = 0
 while True:    
+    naofoi = 0
     window, event, values = sg.read_all_windows()                   ## le os eventos,janelas,e input da tela
 
     if window == janela1 and event == sg.WINDOW_CLOSED:             ## se janela do login fechar ele finaliza o progama            
@@ -90,74 +91,84 @@ while True:
         janela2.close()
 
     if window == janela1 and event == 'Logar':                      ## se o botao Logar for assionado ele fecha o login e abre a do chat
-
-        novo_ip = 'ip='+values['ip']
-        novo_port = 'porta='+values['porta']
-        novo_user = 'usuario='+values['usuario']
-
-        linha_ip = encontrar_string('configs.txt', 'ip=')             
-        linha_port = encontrar_string('configs.txt', 'porta=')   
-        linha_user = encontrar_string('configs.txt', 'usuario=')    
         
-        if linha_ip !='':
-            alterar_linha('configs.txt',linha_ip,novo_ip)
-        if linha_port !='':
-            alterar_linha('configs.txt',linha_port,novo_port)
-        if linha_user !='':
-            alterar_linha('configs.txt',linha_user,novo_user)
+        if values['usuario'] == '':                             ## trata o input para nao deixar vazio
+            naofoi = 1
+        if values['porta'] == '':                          ## trata o input para nao deixar vazio
+            naofoi = 1
+        if values['ip'] == '':                          ## trata o input para nao deixar vazio
+            naofoi = 1
+        if naofoi == 1:
+            sg.popup('Campo inválido')
+        else:
+            novo_ip = 'ip='+values['ip']
+            novo_port = 'porta='+values['porta']
+            novo_user = 'usuario='+values['usuario']
+
+            linha_ip = encontrar_string('configs.txt', 'ip=')             
+            linha_port = encontrar_string('configs.txt', 'porta=')   
+            linha_user = encontrar_string('configs.txt', 'usuario=')    
+
+            if linha_ip !='':
+                alterar_linha('configs.txt',linha_ip,novo_ip)
+            if linha_port !='':
+                alterar_linha('configs.txt',linha_port,novo_port)
+            if linha_user !='':
+                alterar_linha('configs.txt',linha_user,novo_user)
 
 
-        janela1.close()                                             ## fecha janela do login
+            janela1.close()                                             ## fecha janela do login
 
-        nome = values['ip']+":"+values['porta']
-        janela2 = janela_chat(nome)                                 ## abre a janela do chat passando o nome dela (ip+porta)
+            nome = values['ip']+":"+values['porta']
+            janela2 = janela_chat(nome)                                 ## abre a janela do chat passando o nome dela (ip+porta)
 
-        alais = values['usuario']
-        ## função que recebe as mensagens do socket q sao passadas pelo server.py
-        def client_receive():
-            while True:
-                try:
-                    message = client.recv(1024)
-                    message = message.decode('utf-8')
-                    if message == "Nome:":
-                        client.send(alais.encode('utf-8'))
-                    else:
-                        print(emoji.emojize(message))
-                        global contar
-                        contar=0
-                except:
-                    ##print("Error......404")
-                    sg.popup('Error......404')
-                    window.close()
-                    client.close
-                    break
+            alais = values['usuario']
+            ## função que recebe as mensagens do socket q sao passadas pelo server.py
+            def client_receive():
+                while True:
+                    try:
+                        message = client.recv(1024)
+                        message = message.decode('utf-8')
+                        if message == "Nome:":
+                            client.send(alais.encode('utf-8'))
+                        else:
+                            print(emoji.emojize(message))
+                            global contar
+                            contar=0
+                    except:
+                        ##print("Error......404")
+                        sg.popup('Error......404')
+                        window.close()
+                        client.close
+                        break
 
-        ## função de enviar a mensagem
-        def client_send(message_send):
-            global contar
-            if(contar >= 10):                
-                #print("TIMEOUT POR SPAM")
-                sg.popup('TIMEOUT POR SPAM')
-            else:
-                message = f'{alais}: {message_send}'
-                client.send(message.encode('utf-8'))
-                print(message)
-                contar+=1
+            ## função de enviar a mensagem
+            def client_send(message_send):
+                global contar
+                if(contar >= 10):                
+                    #print("TIMEOUT POR SPAM")
+                    sg.popup('TIMEOUT POR SPAM')
+                else:
+                    message = f'{alais}: {message_send}'
+                    client.send(message.encode('utf-8'))
+                    print(message)
+                    contar+=1
 
-        ## abre uma conexão com o socket
-        client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        host = values['ip']
-        port = int(values['porta'])
-        client.connect((host,port))
+            ## abre uma conexão com o socket
+            client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            host = values['ip']
+            port = int(values['porta'])
+            client.connect((host,port))
+            receving_thread =threading.Thread(target=client_receive)        ## criação de tread para receber as mensagens 
+            receving_thread.start()
 
     ## evento do botao Enviar q chama a função client_send()
     if window == janela2 and event == 'Enviar':
-        client_send(values['mensagem'])
+        if(values['mensagem'] !=''):
+            client_send(values['mensagem'])
 
-        window.FindElement('mensagem').Update('')                   ## seta o campo mensagem para nada
+            window.FindElement('mensagem').Update('')                   ## seta o campo mensagem para nada
 
-    receving_thread =threading.Thread(target=client_receive)        ## criação de tread para receber as mensagens 
-    receving_thread.start()
     ##sending_thread = threading.Thread(target=clinet_send)
     ##sending_thread.start()
     
