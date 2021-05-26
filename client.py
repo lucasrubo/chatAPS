@@ -2,12 +2,50 @@ from PySimpleGUI import PySimpleGUI as sg
 import socket
 import threading
 import emoji
+import re
+
+arquivo_frases_sim_n = open('configs.txt',encoding="utf8")
+lista_frases_sim_n = arquivo_frases_sim_n.readlines()
+arquivo_frases_sim_n.close()
+
+for config_frase  in lista_frases_sim_n :
+    config_frase = config_frase.replace('\n','')
+    ##print(config_frase)
+    if re.search("ip", config_frase):
+        host = config_frase.replace('ip=','')
+        
+    if re.search("porta", config_frase):
+        port = config_frase.replace('porta=','')
+
+    if re.search("usuario", config_frase):
+        usuario = config_frase.replace('usuario=','')
+
+def encontrar_string(path,string):
+    with open(path,'r') as f:
+        texto=f.readlines()
+    for i in texto:
+        if string in i:
+            return texto.index(i)
+
+def alterar_linha(path,index_linha,nova_linha):
+    with open(path,'r') as f:
+        texto=f.readlines()
+    with open(path,'w') as f:
+        for i in texto:
+            if texto.index(i)==index_linha:
+                if(nova_linha == ''):                    
+                    f.write(nova_linha)
+                else:
+                    f.write(nova_linha+'\n')
+            else:
+                f.write(i)
 
 def janela_chat(sala):
     # layout
-    sg.theme('Black')
+    sg.theme('DarkGrey9')
     #sg.theme('GreenMono')
     layout = [
+        [sg.Text('',pad=(240,0)),sg.Button('Sair')],
         [sg.Output(size=(400,30), key='chat')],
         [sg.Multiline(size=(62,8),key="mensagem"),sg.Button('Enviar')],
     ]    
@@ -17,25 +55,22 @@ def janela_chat(sala):
 
 def janela_username():
     # layout
-    sg.theme('Black')
+    sg.theme('DarkGrey9')
     #sg.theme('GreenMono')
     layout = [
         [sg.Text('Usuário:')],
-        [sg.Input("user",size=(30, 1),key='usuario')],
+        [sg.Input(usuario,size=(30, 1),key='usuario')],
         [sg.Text('')],
         [sg.Text('IP:')],
-        [sg.Input("26.122.120.56",size=(30, 1),key='ip')],
+        [sg.Input(host,size=(30, 1),key='ip')],
         [sg.Text('')],
         [sg.Text('Porta:')],
-        [sg.Input("59000",size=(30, 1),key='porta')],
+        [sg.Input(port,size=(30, 1),key='porta')],
         [sg.Text('',pad=(83,0)),sg.Button('Logar')],
     ]    
     
     nome_tela = 'Login'
     return sg.Window(nome_tela, layout,location=(120,120), size=(240,250),finalize=True)
-
-    
-
 
 # Janela
 janela1,janela2 = janela_username(), None
@@ -49,6 +84,24 @@ while True:
         janela2.close()
 
     if window == janela1 and event == 'Logar':
+
+        novo_ip = 'ip='+values['ip']
+        novo_port = 'porta='+values['porta']
+        novo_user = 'usuario='+values['usuario']
+
+        linha_ip = encontrar_string('configs.txt', 'ip=')    
+        linha_port = encontrar_string('configs.txt', 'porta=')   
+        linha_user = encontrar_string('configs.txt', 'usuario=')    
+        ##print(linha_ip)
+        ##print(linha_port)
+        if linha_ip !='':
+            alterar_linha('configs.txt',linha_ip,novo_ip)
+        if linha_port !='':
+            alterar_linha('configs.txt',linha_port,novo_port)
+        if linha_user !='':
+            alterar_linha('configs.txt',linha_user,novo_user)
+
+
         janela1.close()
         ##janela2.un_hide()
         nome = values['ip']+":"+values['porta']
@@ -105,5 +158,7 @@ while True:
     ##sending_thread = threading.Thread(target=clinet_send)
     ##sending_thread.start()
     
+    if window == janela2 and event == 'Sair':     
+        break
 # Close
 window.close()
