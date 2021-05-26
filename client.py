@@ -1,16 +1,17 @@
-from PySimpleGUI import PySimpleGUI as sg
-import socket
-import threading
-import emoji
-import re
+from PySimpleGUI import PySimpleGUI as sg       ## ferramenta usada paar criar um layout
+import socket                                   ## import da ferrramenta de abrir sockets
+import threading                                ## ferramenta pra deixar rodando sempre a função de receber mensagem
+import emoji                                    ## emoji no console
+import re                                       ## ferramenta de search na variavel
 
-arquivo_frases_sim_n = open('configs.txt',encoding="utf8")
-lista_frases_sim_n = arquivo_frases_sim_n.readlines()
-arquivo_frases_sim_n.close()
+## Aqui ele abre o arquivo txt aonde salva o ip,port e usuario
+arquivo_config = open('configs.txt',encoding="utf8")
+arquivo_config_read = arquivo_config.readlines()
+arquivo_config.close()
 
-for config_frase  in lista_frases_sim_n :
+## Aqui ele le o arquivo txt aonde salva o ip,port e usuario
+for config_frase  in arquivo_config_read :
     config_frase = config_frase.replace('\n','')
-    ##print(config_frase)
     if re.search("ip", config_frase):
         host = config_frase.replace('ip=','')
         
@@ -20,6 +21,7 @@ for config_frase  in lista_frases_sim_n :
     if re.search("usuario", config_frase):
         usuario = config_frase.replace('usuario=','')
 
+## ferramenta de econtra a linha em que a string se localiza no txt
 def encontrar_string(path,string):
     with open(path,'r') as f:
         texto=f.readlines()
@@ -27,6 +29,7 @@ def encontrar_string(path,string):
         if string in i:
             return texto.index(i)
 
+## ferramenta que altera a linha desejada no txt
 def alterar_linha(path,index_linha,nova_linha):
     with open(path,'r') as f:
         texto=f.readlines()
@@ -40,6 +43,7 @@ def alterar_linha(path,index_linha,nova_linha):
             else:
                 f.write(i)
 
+## layout da janela do chat
 def janela_chat(sala):
     # layout
     sg.theme('DarkGrey9')
@@ -53,6 +57,7 @@ def janela_chat(sala):
     nome_tela = 'ChatRoom: '+sala
     return sg.Window(nome_tela, layout,location=(120,120), size=(550,580),finalize=True)
 
+## layout da janela do login
 def janela_username():
     # layout
     sg.theme('DarkGrey9')
@@ -75,26 +80,25 @@ def janela_username():
 # Janela
 janela1,janela2 = janela_username(), None
 contar = 0
-while True:
-    window, event, values = sg.read_all_windows()
-    #window["-OUT-"](disabled=True)
-    if window == janela1 and event == sg.WINDOW_CLOSED:
+while True:    
+    window, event, values = sg.read_all_windows()                   ## le os eventos,janelas,e input da tela
+
+    if window == janela1 and event == sg.WINDOW_CLOSED:             ## se janela do login fechar ele finaliza o progama            
         break
     
-    if window == janela2 and event == sg.WINDOW_CLOSED:   
+    if window == janela2 and event == sg.WINDOW_CLOSED:             ## se janela do chat fechar ele fecha a janela, pois finalizar o programa causava um crash    
         janela2.close()
 
-    if window == janela1 and event == 'Logar':
+    if window == janela1 and event == 'Logar':                      ## se o botao Logar for assionado ele fecha o login e abre a do chat
 
         novo_ip = 'ip='+values['ip']
         novo_port = 'porta='+values['porta']
         novo_user = 'usuario='+values['usuario']
 
-        linha_ip = encontrar_string('configs.txt', 'ip=')    
+        linha_ip = encontrar_string('configs.txt', 'ip=')             
         linha_port = encontrar_string('configs.txt', 'porta=')   
         linha_user = encontrar_string('configs.txt', 'usuario=')    
-        ##print(linha_ip)
-        ##print(linha_port)
+        
         if linha_ip !='':
             alterar_linha('configs.txt',linha_ip,novo_ip)
         if linha_port !='':
@@ -103,14 +107,13 @@ while True:
             alterar_linha('configs.txt',linha_user,novo_user)
 
 
-        janela1.close()
-        ##janela2.un_hide()
-        nome = values['ip']+":"+values['porta']
-        janela2 = janela_chat(nome)
+        janela1.close()                                             ## fecha janela do login
 
-        ##alais = input("Escolha um Nome: ")
+        nome = values['ip']+":"+values['porta']
+        janela2 = janela_chat(nome)                                 ## abre a janela do chat passando o nome dela (ip+porta)
 
         alais = values['usuario']
+        ## função que recebe as mensagens do socket q sao passadas pelo server.py
         def client_receive():
             while True:
                 try:
@@ -129,6 +132,7 @@ while True:
                     client.close
                     break
 
+        ## função de enviar a mensagem
         def client_send(message_send):
             global contar
             if(contar >= 10):                
@@ -140,27 +144,24 @@ while True:
                 print(message)
                 contar+=1
 
-
+        ## abre uma conexão com o socket
         client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         host = values['ip']
         port = int(values['porta'])
         client.connect((host,port))
-        
-        # Make the Output Element "read only"
-        #window.Element('chat')._TKOut.output.bind("<Key>", lambda e: "break")
 
+    ## evento do botao Enviar q chama a função client_send()
     if window == janela2 and event == 'Enviar':
         client_send(values['mensagem'])
-        ##print("ta indo sim ")
-        ##print(values['mensagem'])
-        window.FindElement('mensagem').Update('')
 
-    receving_thread =threading.Thread(target=client_receive)
+        window.FindElement('mensagem').Update('')                   ## seta o campo mensagem para nada
+
+    receving_thread =threading.Thread(target=client_receive)        ## criação de tread para receber as mensagens 
     receving_thread.start()
     ##sending_thread = threading.Thread(target=clinet_send)
     ##sending_thread.start()
     
-    if window == janela2 and event == 'Sair':     
+    if window == janela2 and event == 'Sair':                       ## evento botao sair fecha o programa
         break
 
         
