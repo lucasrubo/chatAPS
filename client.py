@@ -50,7 +50,7 @@ def janela_chat(sala):
     #sg.theme('GreenMono')
     layout = [
         [sg.Text('',pad=(240,0)),sg.Button('Sair')],
-        [sg.Multiline(size=(300,28), auto_refresh=True, reroute_stdout=True, reroute_cprint=True, disabled=True, key='-OUT-')],
+        [sg.Multiline(size=(300,28), auto_refresh=True, reroute_stdout=True, reroute_cprint=True, disabled=True,autoscroll = True, key='-OUT-')],
         [sg.Multiline(size=(62,8),key="mensagem"),sg.Button('Enviar')],
     ]    
     
