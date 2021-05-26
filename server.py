@@ -69,9 +69,9 @@ while True:
 
     if window == janela1 and event == 'Iniciar':                    ## se o botao Iniciar for assionado ele fecha o login e abre o cmd
         
-        if values['porta'] == '':                          ## trata o input para nao deixar vazio
+        if values['porta'] == '':                                   ## trata o input para nao deixar vazio
             naofoi = 1
-        if values['ip'] == '':                          ## trata o input para nao deixar vazio
+        if values['ip'] == '':                                      ## trata o input para nao deixar vazio
             naofoi = 1
         if naofoi == 1:
             sg.popup('Campo inválido')

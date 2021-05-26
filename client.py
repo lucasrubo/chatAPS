@@ -92,11 +92,11 @@ while True:
 
     if window == janela1 and event == 'Logar':                      ## se o botao Logar for assionado ele fecha o login e abre a do chat
         
-        if values['usuario'] == '':                             ## trata o input para nao deixar vazio
+        if values['usuario'] == '':                                 ## trata o input para nao deixar vazio
             naofoi = 1
-        if values['porta'] == '':                          ## trata o input para nao deixar vazio
+        if values['porta'] == '':                                   ## trata o input para nao deixar vazio
             naofoi = 1
-        if values['ip'] == '':                          ## trata o input para nao deixar vazio
+        if values['ip'] == '':                                      ## trata o input para nao deixar vazio
             naofoi = 1
         if naofoi == 1:
             sg.popup('Campo inválido')
@@ -164,7 +164,8 @@ while True:
 
     ## evento do botao Enviar q chama a função client_send()
     if window == janela2 and event == 'Enviar':
-        if(values['mensagem'] !=''):
+        mensagem_tratada = values['mensagem'].replace('\n','')
+        if(mensagem_tratada !=''):
             client_send(values['mensagem'])
 
             window.FindElement('mensagem').Update('')                   ## seta o campo mensagem para nada
