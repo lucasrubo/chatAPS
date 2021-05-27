@@ -140,18 +140,18 @@ while True:
                         else:
                             match = re.search(":", message )
                             if match:
-                                print()
+                                print(emoji.emojize(message))
                             else:
+                                print(emoji.emojize(message))
                                 if re.search(" entrou no chat", message):                            
                                     # Carregando o arquivo MP3 e executando
                                     if os.path.exists('som/entrou.mp3'):
                                         pygame.mixer.music.load('som/entrou.mp3')
                                         pygame.mixer.music.play()
-                                        pygame.mixer.music.set_volume(1)
-
+                                        pygame.mixer.music.set_volume(1)    
                                         while pygame.mixer.music.get_busy(): 
                                             pygame.time.Clock().tick(10)
-                            print(emoji.emojize(message))
+                                        
                             global contar
                             contar=0
                     except:
