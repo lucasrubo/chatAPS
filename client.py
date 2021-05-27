@@ -4,6 +4,8 @@ import threading                                ## ferramenta pra deixar rodando
 import emoji                                    ## emoji no console
 import re                                       ## ferramenta de search na variavel
 import time 
+import pygame
+import os
 
 ## Aqui ele abre o arquivo txt aonde salva o ip,port e usuario
 arquivo_config = open('configs.txt',encoding="utf8")
@@ -81,6 +83,9 @@ def janela_username():
 # Janela
 janela1,janela2 = janela_username(), None
 contar = 0
+
+# Inicializando o PyGame
+pygame.init()
 while True:    
     naofoi = 0
     window, event, values = sg.read_all_windows()                   ## le os eventos,janelas,e input da tela
@@ -133,6 +138,16 @@ while True:
                         if message == "Nome:":
                             client.send(alais.encode('utf-8'))
                         else:
+                            if re.search(" entrou no chat", message):                              
+                                #playsound('entrou.mp3')
+                                # Carregando o arquivo MP3 e executando
+                                if os.path.exists('som/entrou.mp3'):
+                                    pygame.mixer.music.load('entrou.mp3')
+                                    pygame.mixer.music.play()
+                                    pygame.mixer.music.set_volume(1)
+
+                                    while pygame.mixer.music.get_busy(): 
+                                        pygame.time.Clock().tick(10)
                             print(emoji.emojize(message))
                             global contar
                             contar=0
