@@ -177,10 +177,10 @@ while True:
     if window == janela2 and event == 'Hitórico':
         data_atual = time.strftime('%Y-%m-%d_%H_%M', time.localtime())
         try:
-            arquivo = open("historico_chat_"+data_atual+".txt",'w')            
+            arquivo = open("historico/historico_chat_"+data_atual+".txt",'w')            
             arquivo.write(values['-OUT-'])
         except FileNotFoundError:
-            arquivo = open("historico_chat"+data_atual+".txt", 'w')
+            arquivo = open("historico/historico_chat"+data_atual+".txt", 'w')
             arquivo.write(values['-OUT-'])
         arquivo.close()
 
