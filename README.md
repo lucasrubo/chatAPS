@@ -8,6 +8,18 @@
 
 ```
 
+Execute no cmd as funções:
+pip install pygame
+pip install sockets
+pip install pysimplegui
+pip install emoji
+
+```
+
+### Passo 2:
+
+```
+
 Agora execute o arquivo server.py em qualquer terminal cmd
 
 ```
