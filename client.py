@@ -141,7 +141,7 @@ while True:
                             if re.search(" entrou no chat", message):                            
                                 # Carregando o arquivo MP3 e executando
                                 if os.path.exists('som/entrou.mp3'):
-                                    pygame.mixer.music.load('entrou.mp3')
+                                    pygame.mixer.music.load('som/entrou.mp3')
                                     pygame.mixer.music.play()
                                     pygame.mixer.music.set_volume(1)
 

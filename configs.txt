@@ -1,4 +1,4 @@
 ## configuração da tela client.py
-usuario=
+usuario=rubo
 ip=26.122.120.56
 porta=59000
