@@ -37,7 +37,7 @@ Agora execute o arquivo server.py em qualquer terminal cmd
 
 ```
 
-### Etapa 4:
+### Passo 4:
 
 ```
 
