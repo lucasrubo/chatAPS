@@ -3,8 +3,8 @@ import socket                                   ## import da ferrramenta de abri
 import threading                                ## ferramenta pra deixar rodando sempre a função de receber mensagem
 import emoji                                    ## emoji no console
 import re                                       ## ferramenta de search na variavel
-import time 
-import pygame
+import time                                     ## ferramenta de pegar tempo atual
+import pygame                                   ## ferramenta de tocar musica
 import os
 
 ## Aqui ele abre o arquivo txt aonde salva o ip,port e usuario
@@ -138,8 +138,7 @@ while True:
                         if message == "Nome:":
                             client.send(alais.encode('utf-8'))
                         else:
-                            if re.search(" entrou no chat", message):                              
-                                #playsound('entrou.mp3')
+                            if re.search(" entrou no chat", message):                            
                                 # Carregando o arquivo MP3 e executando
                                 if os.path.exists('som/entrou.mp3'):
                                     pygame.mixer.music.load('entrou.mp3')
