@@ -3,6 +3,7 @@ import socket                                   ## import da ferrramenta de abri
 import threading                                ## ferramenta pra deixar rodando sempre a função de receber mensagem
 import emoji                                    ## emoji no console
 import re                                       ## ferramenta de search na variavel
+import time 
 
 ## Aqui ele abre o arquivo txt aonde salva o ip,port e usuario
 arquivo_config = open('configs.txt',encoding="utf8")
@@ -49,7 +50,7 @@ def janela_chat(sala):
     sg.theme('DarkGrey9')
     #sg.theme('GreenMono')
     layout = [
-        [sg.Text('',pad=(240,0)),sg.Button('Sair')],
+        [sg.Text('',pad=(210,0)),sg.Button('Hitórico'),sg.Button('Sair')],
         [sg.Multiline(size=(300,28), auto_refresh=True, reroute_stdout=True, reroute_cprint=True, disabled=True,autoscroll = True, key='-OUT-')],
         [sg.Multiline(size=(62,8),key="mensagem"),sg.Button('Enviar')],
     ]    
@@ -146,13 +147,16 @@ while True:
             def client_send(message_send):
                 global contar
                 if(contar >= 10):                
-                    #print("TIMEOUT POR SPAM")
-                    sg.popup('TIMEOUT POR SPAM')
+                    sg.popup('TIMEOUT POR SPAM')                            
                 else:
-                    message = f'{alais}: {message_send}'
-                    client.send(message.encode('utf-8'))
-                    print(message)
-                    contar+=1
+                    if len(message_send)>600:
+                        sg.popup('Limite de caracter'+str(len(message_send))+"/600")        
+                    else:
+                        message = f'{alais}: {message_send}'
+                        client.send(message.encode('utf-8'))
+                        print(message)
+                        contar+=1
+                        window.FindElement('mensagem').Update('')           ## seta o campo mensagem para nada
 
             ## abre uma conexão com o socket
             client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -165,10 +169,20 @@ while True:
     ## evento do botao Enviar q chama a função client_send()
     if window == janela2 and event == 'Enviar':
         mensagem_tratada = values['mensagem'].replace('\n','')
+        mensagem_tratada = mensagem_tratada.replace(' ','')
         if(mensagem_tratada !=''):
-            client_send(values['mensagem'])
+            client_send(values['mensagem'])        
 
-            window.FindElement('mensagem').Update('')                   ## seta o campo mensagem para nada
+    ## salva histórico de mensagem
+    if window == janela2 and event == 'Hitórico':
+        data_atual = time.strftime('%Y-%m-%d_%H_%M', time.localtime())
+        try:
+            arquivo = open("historico_chat_"+data_atual+".txt",'w')            
+            arquivo.write(values['-OUT-'])
+        except FileNotFoundError:
+            arquivo = open("historico_chat"+data_atual+".txt", 'w')
+            arquivo.write(values['-OUT-'])
+        arquivo.close()
 
     ##sending_thread = threading.Thread(target=clinet_send)
     ##sending_thread.start()
