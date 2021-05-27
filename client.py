@@ -201,6 +201,7 @@ while True:
             arquivo = open("historico/historico_chat"+data_atual+".txt", 'w')
             arquivo.write(values['-OUT-'])
         arquivo.close()
+        sg.popup("Histórico salvo com sucesso!\nhistorico/historico_chat_"+data_atual+".txt")
 
     ##sending_thread = threading.Thread(target=clinet_send)
     ##sending_thread.start()
