@@ -138,15 +138,19 @@ while True:
                         if message == "Nome:":
                             client.send(alais.encode('utf-8'))
                         else:
-                            if re.search(" entrou no chat", message):                            
-                                # Carregando o arquivo MP3 e executando
-                                if os.path.exists('som/entrou.mp3'):
-                                    pygame.mixer.music.load('som/entrou.mp3')
-                                    pygame.mixer.music.play()
-                                    pygame.mixer.music.set_volume(1)
+                            match = re.search(":", message )
+                            if match:
+                                print()
+                            else:
+                                if re.search(" entrou no chat", message):                            
+                                    # Carregando o arquivo MP3 e executando
+                                    if os.path.exists('som/entrou.mp3'):
+                                        pygame.mixer.music.load('som/entrou.mp3')
+                                        pygame.mixer.music.play()
+                                        pygame.mixer.music.set_volume(1)
 
-                                    while pygame.mixer.music.get_busy(): 
-                                        pygame.time.Clock().tick(10)
+                                        while pygame.mixer.music.get_busy(): 
+                                            pygame.time.Clock().tick(10)
                             print(emoji.emojize(message))
                             global contar
                             contar=0
