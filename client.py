@@ -164,7 +164,7 @@ while True:
                     sg.popup('TIMEOUT POR SPAM')                            
                 else:
                     if len(message_send)>600:
-                        sg.popup('Limite de caracter'+str(len(message_send))+"/600")        
+                        sg.popup('Limite de caracter '+str(len(message_send))+"/600")        
                     else:
                         message = f'{alais}: {message_send}'
                         client.send(message.encode('utf-8'))
